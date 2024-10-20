@@ -43,6 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<String> getData() async {
+    await Future.delayed(const Duration(seconds: 3));
+    return  'You have pushed the button this many times:';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +61,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            FutureBuilder<String>(
+              future: getData(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final data = snapshot.data!;
+
+                return Text(
+                data,
+                );
+              }
             ),
             Text(
               '$_counter',
